@@ -67,7 +67,7 @@ simulacao_login/
 │
 ├── requirements.txt             # Lista de dependências Python
 └── main.py                      # Ponto de entrada principal do projeto
-´´´
+´´´plaintext
 
 - 📘 Mesmo com a base já pronta, essas distribuições podem ser aplicadas para análise e modelagem dos dados existentes, não para geração de novos.
 

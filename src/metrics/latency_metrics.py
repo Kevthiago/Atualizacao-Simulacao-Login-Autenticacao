@@ -1,0 +1,1 @@
+# Cálculo da Latência

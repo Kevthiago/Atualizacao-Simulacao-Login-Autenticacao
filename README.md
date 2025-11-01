@@ -119,6 +119,8 @@ simulacao_login/
 
 - Executar testes unitários e revisar consistência das análises.
 
+![Descrição da imagem](imagem.png "Caminho para desenvolver o projeto")
+
 ## 📊 5. Métricas-Chave do Projeto
 ´´´
 Métrica	Descrição

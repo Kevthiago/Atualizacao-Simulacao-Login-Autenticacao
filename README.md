@@ -122,13 +122,15 @@ simulacao_login/
 
 ## 📊 5. Métricas-Chave do Projeto
 ´´´
-Métrica	Descrição
-Taxa de sucesso de login (%)	Percentual de logins concluídos com sucesso
-Tempo médio de autenticação (ms)	Média, mediana e percentis (p95, p99)
-Retries por sessão	Quantidade média de tentativas antes do sucesso
-Taxa de bloqueio (captcha/lockout)	Percentual de logins bloqueados
-Tempo médio de fila (M/M/1)	Tempo esperado de espera para autenticação
-Taxa de eventos anômalos	Proporção de IPs/usuários suspeitos detectados
+| Métrica                         | Descrição                                                   |
+|----------------------------------|-------------------------------------------------------------|
+| Taxa de sucesso de login (%)     | Percentual de logins concluídos com sucesso                 |
+| Tempo médio de autenticação (ms) | Média, mediana e percentis (p95, p99)                       |
+| Retries por sessão               | Quantidade média de tentativas antes do sucesso             |
+| Taxa de bloqueio (captcha/lockout) | Percentual de logins bloqueados                            |
+| Tempo médio de fila (M/M/1)      | Tempo esperado de espera para autenticação                  |
+| Taxa de eventos anômalos         | Proporção de IPs/usuários suspeitos detectados              |
+
 ´´´
 
 ## 🧩 6. Modelos e Técnicas Sugeridas

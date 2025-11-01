@@ -79,7 +79,6 @@ simulacao_login/
 | **Exponencial**        | ( f(x;\lambda) = \lambda e^{-\lambda x} )      | Calcular o tempo médio entre tentativas de login         |
 | **Normal / Lognormal** | —                                              | Modelar tempos de autenticação ou latência (cauda longa) |
 | **Binomial / Poisson** | —                                              | Simular número de tentativas até o sucesso do login      |
-´´´
 
 ## ⚙️ 4. Pipeline de Execução
 
@@ -119,7 +118,7 @@ simulacao_login/
 
 - Executar testes unitários e revisar consistência das análises.
 
-![Descrição da imagem](imagem.png "Caminho para desenvolver o projeto")
+![Descrição da imagem](image.png "Caminho para desenvolver o projeto")
 
 ## 📊 5. Métricas-Chave do Projeto
 ´´´

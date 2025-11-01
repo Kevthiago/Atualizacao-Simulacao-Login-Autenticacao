@@ -121,7 +121,6 @@ simulacao_login/
 ![Descrição da imagem](image.png "Caminho para desenvolver o projeto")
 
 ## 📊 5. Métricas-Chave do Projeto
-´´´
 | Métrica                         | Descrição                                                   |
 |----------------------------------|-------------------------------------------------------------|
 | Taxa de sucesso de login (%)     | Percentual de logins concluídos com sucesso                 |
@@ -131,7 +130,6 @@ simulacao_login/
 | Tempo médio de fila (M/M/1)      | Tempo esperado de espera para autenticação                  |
 | Taxa de eventos anômalos         | Proporção de IPs/usuários suspeitos detectados              |
 
-´´´
 
 ## 🧩 6. Modelos e Técnicas Sugeridas
 

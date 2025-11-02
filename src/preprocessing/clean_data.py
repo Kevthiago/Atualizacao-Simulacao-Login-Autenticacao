@@ -2,7 +2,7 @@
 import pandas as pd
 from src.config import DATA_RAW, DATA_PROCESSED
 
-def clean_data():
+def clean_dataset():
     # Carregar os dados brutos
     df = pd.read_excel(DATA_RAW)
 

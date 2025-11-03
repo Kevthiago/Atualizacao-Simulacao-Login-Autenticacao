@@ -1,75 +1,67 @@
-# Ponto de Entrada do Programa
-
-import os
+# main.py
 import pandas as pd
+import os
+from pathlib import Path
 
 # Configuração dos caminhos dos dados
-from src.config import DATA_PROCESSED
+from src.config import DATA_RAW, DATA_PROCESSED, DATA_MODEL_READY
 
 # Pré-processamento dos dados
 from src.preprocessing.clean_data import clean_dataset
-from src.preprocessing.feature_engineering import create_features
+from src.preprocessing.feature_engineering import create_features, preprocess_for_model
 
-# Métricas
-from src.metrics.success_rate import success_rate
-from src.metrics.latency_metrics import latency_stats
+# (Imports das outras etapas estão comentados, pois ainda não existem)
+# from src.metrics.success_rate import success_rate
+# ...e assim por diante
 
-# Simulação das Filas
-from src.queue_simulation import mm1_queue
-from src.queue_simulation import mm2_queue
 
-# Modelos e detecção
-from src.models.anomaly_detection import detect_anomalies
-from src.models.clustering import run_clustering
-from src.models.predictive_model import train_predictive_model
+def main_data_pipeline():
+    """
+    Executa o pipeline de preparação de dados:
+    1. Carrega dados brutos.
+    2. Limpa os dados e salva em DATA_PROCESSED.
+    3. Aplica engenharia de features.
+    4. Aplica pré-processamento final e salva em DATA_MODEL_READY.
+    """
+    print("Iniciando o pipeline de preparação de dados...")
 
-# Visualização
-# (você pode deixar vazio por enquanto, mas já prepara o import)
-# from src.visualization.plot_kpis import plot_metrics
-
-def main():
-    print("Iniciando o pipeline de simulação de login com 2FA...")
+    # Garantir que os diretórios de saída existam
+    os.makedirs(Path(DATA_PROCESSED).parent, exist_ok=True)
+    os.makedirs(Path(DATA_MODEL_READY).parent, exist_ok=True)
 
     # Passo 1: Limpeza dos dados
-    print("Etapa 1: Limpeza dos dados...")
-    df = clean_dataset()
+    print("Etapa 1: Carregando e limpando dados brutos...")
+    try:
+        df_raw = pd.read_excel(DATA_RAW)
+    except FileNotFoundError:
+        print(f"Erro: Arquivo bruto não encontrado em {DATA_RAW}")
+        return
+        
+    df_clean = clean_dataset(df_raw)
+    
+    # Salvar o arquivo limpo intermediário
+    df_clean.to_csv(DATA_PROCESSED, index=False)
+    print(f"Dados limpos salvos em: {DATA_PROCESSED}")
+
 
     # Passo 2: Engenharia de características
     print("Etapa 2: Engenharia de características...")
-    df = create_features(df)
+    # (Note que `create_features` espera o df limpo, que vem de DATA_PROCESSED)
+    df_featured = create_features(df_clean) 
 
-    # Passo 3: Cálculo das métricas
-    print("Etapa 3: Cálculo de métricas...")
-    print(f"Taxa de sucesso: {success_rate(df):.2f}%")
-    print("Estatísticas de latência:")
-    print(latency_stats(df))
+    # Passo 3: Pré-processamento final para o modelo
+    print("Etapa 3: Pré-processamento final para o modelo...")
+    df_model_ready = preprocess_for_model(df_featured)
 
-    # Passo 4: Simulação das filas
-    print("Etapa 4: Simulação das filas (MM1 e MM2)...")
-    results_mm1 = mm1_queue(lambd=2.5, mu=4.0)
-    results_mm2 = mm2_queue(lambd=2.5, mu=4.0, c=2)
-    print("Resultados da simulação MM1:")
-    print(results_mm1)
-    print("Resultados da simulação MM2:")
-    print(results_mm2)
+    # Passo 4: Salvar os dados prontos para o modelo
+    print("Etapa 4: Salvando os dados prontos para o modelo...")
+    df_model_ready.to_csv(DATA_MODEL_READY, index=False)
+    print(f"Dados prontos para o modelo salvos em: {DATA_MODEL_READY}")
+    
+    print("\n--- Pipeline de Dados Concluído com Sucesso! ---")
+    print(f"Dataset final: {df_model_ready.shape}")
+    print(df_model_ready.head())
 
-    # Passo 5: Modelos e detecção
-    print("Etapa 5: Detecção de anomalias e padrões...")
-    anomalies = detect_anomalies(df)
-    clusters = run_clustering(df)
-    model = train_predictive_model(df)
-
-    # Passo 6: Salvar os resultados processados
-    print("Etapa 6: Salvando os dados processados...")
-    os.makedirs(os.path.dirname(DATA_PROCESSED), exist_ok=True)
-    df.to_csv(DATA_PROCESSED, index=False)
-    print(f"Dados processados salvos em: {DATA_PROCESSED}")
-
-    # Visualização (se implementada)
-    # print("Etapa 7: Visualização dos KPIs...")
-    # plot_metrics(df)
-
-    print("Pipeline concluído com sucesso!")
 
 if __name__ == "__main__":
-    main()
+    main_data_pipeline()

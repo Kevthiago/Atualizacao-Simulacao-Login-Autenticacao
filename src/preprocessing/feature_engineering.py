@@ -1,5 +1,10 @@
-# Engenharia de Recursos
+# src/preprocessing/feature_engineering.py
 import pandas as pd
+import numpy as np
+
+# =============================================================================
+# FUNÇÃO 1: CRIAR FEATURES
+# =============================================================================
 
 def create_features(df: pd.DataFrame) -> pd.DataFrame:
     """
@@ -100,3 +105,55 @@ def create_features(df: pd.DataFrame) -> pd.DataFrame:
     )
 
     return df_copy
+
+# =============================================================================
+# FUNÇÃO 2: PRÉ-PROCESSAMENTO FINAL (PASSO 1 e 2)
+# =============================================================================
+
+def preprocess_for_model(df_featured: pd.DataFrame) -> pd.DataFrame:
+    """
+    Executa o pré-processamento final: trata NaNs da engenharia de features,
+    faz o encoding final e remove colunas desnecessárias.
+    """
+    print("Executando pré-processamento final (Tratando NaNs, Encoding, Drop)...")
+    
+    # --- PASSO 1: TRATAMENTO DE NaNs ---
+    # (Trata os NaNs criados por .diff(), .shift() e .rolling())
+    df_processed = df_featured.copy()
+    
+    # Preencher time_since_last_login com -1 (para diferenciar de 0 segundos)
+    df_processed['time_since_last_login'] = df_processed['time_since_last_login'].fillna(-1)
+    
+    # Preencher login_frequency_24h com 1 (primeiro login na janela)
+    df_processed['login_frequency_24h'] = df_processed['login_frequency_24h'].fillna(1)
+    
+    # Preencher colunas 'is_new' e desvios com 0 (primeiro login não é "novo" e não tem "desvio")
+    cols_to_fill_zero = ['is_new_country', 'is_new_device', 'auth_method_changed', 
+                         'desvio_duracao_login', 'desvio_latencia']
+    df_processed[cols_to_fill_zero] = df_processed[cols_to_fill_zero].fillna(0)
+
+    # --- PASSO 2: ENCODING E LIMPEZA DE COLUNAS ---
+    
+    # Colunas a serem removidas (identificadores, dados brutos, leaks)
+    cols_to_drop = ['login_id', 'user_id', 'username', 'timestamp', 
+                    'ip_address', 'session_duration_min']
+    
+    # Checar se as colunas existem antes de dropar (para evitar erros)
+    cols_existentes_para_dropar = [col for col in cols_to_drop if col in df_processed.columns]
+    df_processed = df_processed.drop(columns=cols_existentes_para_dropar)
+
+    # Colunas categóricas que ainda precisam de encoding
+    categorical_cols = ['device_type', 'browser', 'os', 'country', 
+                        'time_of_day', 'ip_subnet']
+    
+    # Checar se as colunas existem antes de fazer o encoding
+    cols_existentes_para_encode = [col for col in categorical_cols if col in df_processed.columns]
+    
+    df_model_ready = pd.get_dummies(df_processed, columns=cols_existentes_para_encode, drop_first=True)
+
+    # Garantir que TUDO seja numérico (converter colunas bool de get_dummies para 1/0)
+    for col in df_model_ready.columns:
+        if df_model_ready[col].dtype == 'bool':
+            df_model_ready[col] = df_model_ready[col].astype(int)
+            
+    return df_model_ready

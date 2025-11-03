@@ -1,22 +1,22 @@
-# Limpeza dos dados
+# src/preprocessing/clean_data.py
 import pandas as pd
-from src.config import DATA_RAW, DATA_PROCESSED
 
-def clean_dataset():
-    # Carregar os dados brutos
-    df = pd.read_excel(DATA_RAW)
+# Remova os imports do config.py daqui
 
+def clean_dataset(df: pd.DataFrame) -> pd.DataFrame:
+    """
+    Realiza a limpeza básica nos dados brutos.
+    Recebe um DataFrame e retorna um DataFrame limpo.
+    """
+    print("Executando limpeza (duplicatas, NaNs críticos)...")
+    
     # Realizar a limpeza dos dados
-    df = df.drop_duplicates() # Remover duplicatas
-    df = df.dropna(subset=["user_id", "timestamp"]) # Remover linhas com valores ausentes em colunas críticas
-    df["timestamp"] = pd.to_datetime(df["timestamp"]) # Converter timestamps para datetime
-    df = df.sort_values(by="timestamp") # Ordenar por timestamp
-    df = df.reset_index(drop=True) # Resetar o índice
+    df_clean = df.drop_duplicates() # Remover duplicatas
+    df_clean = df_clean.dropna(subset=["user_id", "timestamp"]) # Remover linhas com valores ausentes
+    
+    # (Estas duas linhas são opcionais aqui, pois o feature_engineering fará isso,
+    # mas é uma boa prática garantir o tipo certo)
+    df_clean["timestamp"] = pd.to_datetime(df_clean["timestamp"]) 
+    df_clean = df_clean.reset_index(drop=True) # Resetar o índice
 
-    # Salvar os dados limpos
-    df.to_csv(DATA_PROCESSED, index=False) 
-
-    print(f"Dados limpos salvos em: {DATA_PROCESSED}")
-    print(df.info())
-    print("Primeiras linhas dos dados limpos:")
-    print(df.head())
+    return df_clean

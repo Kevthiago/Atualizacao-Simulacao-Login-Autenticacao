@@ -4,7 +4,7 @@ import os
 from pathlib import Path
 
 # Configuração dos caminhos dos dados
-from src.config import DATA_RAW, DATA_PROCESSED, DATA_MODEL_READY
+from src.config.config import DATA_RAW, DATA_PROCESSED, DATA_MODEL_READY
 
 # Pré-processamento dos dados
 from src.preprocessing.clean_data import clean_dataset
